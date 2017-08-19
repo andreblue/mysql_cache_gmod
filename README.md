@@ -1,8 +1,8 @@
-#MySQL Cache
+# MySQL Cache
 
 A simple way to cache MySQL tables.
 
-#Requirements
+# Requirements
 
 You need:
 
