@@ -1,17 +1,17 @@
-MySQL Cache
-============
+# MySQL Cache
 
 A simple way to cache MySQL tables.
 
-Requirements
-============
+# Requirements
+
 You need:
+
     Mysqloo(I used Ver 9)
 
-Install
-============
+# Install
+
 Drop into addons file.
 
-Usage
-============
-MysqlCache.RegisterDB(database_id, db_obj)
+# Usage
+
+https://github.com/andreblue/mysql_cache_gmod/wiki
