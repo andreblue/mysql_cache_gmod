@@ -3,7 +3,7 @@ MysqlCache = {}
 MysqlCache.Timer = "MySQLCacheSyncTimer"
 MysqlCache.DB = {}
 --Version Checker
-MysqlCache.Version = {1, 0, 0}
+MysqlCache.Version = {1, 1, 0}
 timer.Simple(30,function()
 http.Fetch("https://raw.githubusercontent.com/andreblue/mysql_cache_gmod/master/version",
 function(body, size, headers, code)
@@ -37,6 +37,7 @@ function MysqlCache.RegisterDB(database_id, db_obj)
   end
   MysqlCache.DB[database_id] = {}
   MysqlCache.DB[database_id].obj = db_obj
+  MysqlCache.DB[database_id].filters = {}
   return true, "Added " .. database_id
 end
 function MysqlCache.UpdateDB(database_id, db_obj)
@@ -87,6 +88,14 @@ function MysqlCache.SetRefreshTime(database_id, refresh_time)
   end
   return false, "Database ID does not exists. You need to register it first with the RegisterDB function"
 end
+function MysqlCache.SetFilter(database_id, table_name, filter)
+  if MysqlCache.DB[database_id] then
+    MysqlCache.DB[database_id].filters[table_name] = filter
+    return true, "Updated filter for " .. table_name .. " on " .. database_id
+  end
+  return false, "Database ID does not exists. You need to register it first with the RegisterDB function"
+end
+
 function MysqlCache.GetTable(database_id, table_name)
   if MysqlCache.DB[database_id] then
     if MysqlCache.DB[database_id].Tables and MysqlCache.DB[database_id].Tables[table_name] then
@@ -107,7 +116,12 @@ function MysqlCache.RunTimer()
       MysqlCache.DB[database_id].next_time = CurTime() + MysqlCache.DB[database_id].refresh_time
       --Update Tables
       for table_name, _ in pairs(MysqlCache.DB[database_id].Tables) do
-        local query = MysqlCache.DB[database_id].obj:query("SELECT * FROM " .. table_name)
+        local query
+        if MysqlCache.DB[database_id].filters[table_name] then
+          query = MysqlCache.DB[database_id].obj:query("SELECT * FROM " .. table_name .. " WHERE " .. tostring(MysqlCache.DB[database_id].filters[table_name]))
+        else
+          query = MysqlCache.DB[database_id].obj:query("SELECT * FROM " .. table_name)
+        end
         function query:onSuccess(data)
           MysqlCache.DB[database_id].Tables[table_name] = data
         end

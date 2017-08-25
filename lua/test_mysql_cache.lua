@@ -38,6 +38,12 @@ db:connect()
 print(MysqlCache.RegisterDB('usync', db))
 print(MysqlCache.RegisterTable('usync', 'usync_users'))
 print(MysqlCache.SetRefreshTime('usync', 20))
+
+print(MysqlCache.RegisterDB('usync2', db))
+print(MysqlCache.RegisterTable('usync2', 'usync_users'))
+print(MysqlCache.SetRefreshTime('usync2', 20))
+print(MysqlCache.SetFilter('usync2', 'usync_users', "steam_id = 'STEAM_0:0:3926223613'"))
+
 timer.Simple(1, function()
   local result, message = MysqlCache.GetTable('usync', 'usync_users')
   if result == false then
@@ -48,6 +54,22 @@ timer.Simple(1, function()
 end)
 timer.Simple(30, function()
   local result, message = MysqlCache.GetTable('usync', 'usync_users')
+  if result == false then
+    print(message)
+  else
+    PrintTable(result)
+  end
+end)
+timer.Simple(1, function()
+  local result, message = MysqlCache.GetTable('usync2', 'usync_users')
+  if result == false then
+    print(message)
+  else
+    PrintTable(result)
+  end
+end)
+timer.Simple(30, function()
+  local result, message = MysqlCache.GetTable('usync2', 'usync_users')
   if result == false then
     print(message)
   else
