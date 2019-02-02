@@ -1,4 +1,4 @@
-# Moved to [Gitlab](https://gitlab.com/andreblue)
+
 # MySQL Cache
 
 A simple way to cache MySQL tables.
